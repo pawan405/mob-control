@@ -1,5 +1,4 @@
 
-//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,54 +9,47 @@ public class PlayerControl : MonoBehaviour
     public float sideSpeed = 8f;
     public float horizontalLimit = 5f;
 
-    // Shared by all players, including newly spawned players.
-    private static bool gameStarted = false;
+    private bool isRunning = false;
 
     private void Update()
     {
-        // Start the entire crowd with one click or tap.
-        if (!gameStarted)
+        // Start crowd with one click or tap.
+        if (!isRunning)
         {
             if (Mouse.current != null &&
                 Mouse.current.leftButton.wasPressedThisFrame)
             {
-                gameStarted = true;
-                Debug.Log("Game Started!");
+                isRunning = true;
             }
             else if (Touchscreen.current != null &&
                      Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
             {
-                gameStarted = true;
-                Debug.Log("Game Started!");
+                isRunning = true;
             }
         }
 
-        if (!gameStarted)
+        if (!isRunning)
             return;
 
-        // Automatically move forward along the Z axis.
+        // Automatic forward movement.
         transform.position +=
             Vector3.forward * forwardSpeed * Time.deltaTime;
 
         float horizontal = 0f;
 
-        // Keyboard controls.
+        // Keyboard movement.
         if (Keyboard.current != null)
         {
             if (Keyboard.current.aKey.isPressed ||
                 Keyboard.current.leftArrowKey.isPressed)
-            {
                 horizontal -= 1f;
-            }
 
             if (Keyboard.current.dKey.isPressed ||
                 Keyboard.current.rightArrowKey.isPressed)
-            {
                 horizontal += 1f;
-            }
         }
 
-        // Mobile horizontal dragging.
+        // Mobile drag movement.
         if (Touchscreen.current != null &&
             Touchscreen.current.primaryTouch.press.isPressed)
         {
@@ -67,12 +59,11 @@ public class PlayerControl : MonoBehaviour
             horizontal = Mathf.Clamp(deltaX / 100f, -1f, 1f);
         }
 
-        // Move left or right.
+        // Move entire crowd left/right.
         transform.position +=
             Vector3.right * horizontal *
             sideSpeed * Time.deltaTime;
 
-        // Keep the crowd inside the track.
         Vector3 position = transform.position;
 
         position.x = Mathf.Clamp(

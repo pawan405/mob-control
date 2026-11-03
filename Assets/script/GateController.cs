@@ -15,33 +15,25 @@ public class GateController : MonoBehaviour
     [Header("Gate Settings")]
     public GateType gateType = GateType.Add;
 
+    [Min(1)]
     public int value = 5;
 
     private bool activated = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("TEST 3: Gate touched by " + other.name);
-
-        // Ignore further contacts after this gate is activated.
         if (activated)
             return;
 
-        // Find the CrowdManager in the player's parents.
         CrowdManager crowd =
             other.GetComponentInParent<CrowdManager>();
 
         if (crowd == null)
-        {
-            Debug.LogWarning(
-                "TEST 4: CrowdManager not found for " + other.name
-            );
             return;
-        }
 
         activated = true;
 
-        Debug.Log("TEST 4: CrowdManager found!");
+        int before = crowd.CurrentCount;
 
         switch (gateType)
         {
@@ -63,8 +55,9 @@ public class GateController : MonoBehaviour
         }
 
         Debug.Log(
-            "TEST 5: Gate processed. Total players = "
-            + crowd.CurrentCount
+            "Gate: " + gateType +
+            " | Before: " + before +
+            " | After: " + crowd.CurrentCount
         );
     }
 }
