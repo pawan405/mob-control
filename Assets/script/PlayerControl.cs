@@ -2,18 +2,27 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerControl : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float forwardSpeed = 5f;
     public float sideSpeed = 8f;
-    public float horizontalLimit = 5f;
+    public float horizontalLimit = 3.2f;
 
+    private Rigidbody rb;
     private bool isRunning = false;
+
+    private float horizontalInput;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     private void Update()
     {
-        // Start crowd with one click or tap.
+        // Start game
         if (!isRunning)
         {
             if (Mouse.current != null &&
@@ -22,34 +31,37 @@ public class PlayerControl : MonoBehaviour
                 isRunning = true;
             }
             else if (Touchscreen.current != null &&
-                     Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
+                Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
             {
                 isRunning = true;
             }
         }
 
         if (!isRunning)
+        {
+            horizontalInput = 0f;
             return;
-
-        // Automatic forward movement.
-        transform.position +=
-            Vector3.forward * forwardSpeed * Time.deltaTime;
+        }
 
         float horizontal = 0f;
 
-        // Keyboard movement.
+        // Keyboard movement
         if (Keyboard.current != null)
         {
             if (Keyboard.current.aKey.isPressed ||
                 Keyboard.current.leftArrowKey.isPressed)
+            {
                 horizontal -= 1f;
+            }
 
             if (Keyboard.current.dKey.isPressed ||
                 Keyboard.current.rightArrowKey.isPressed)
+            {
                 horizontal += 1f;
+            }
         }
 
-        // Mobile drag movement.
+        // Mobile drag movement
         if (Touchscreen.current != null &&
             Touchscreen.current.primaryTouch.press.isPressed)
         {
@@ -59,19 +71,30 @@ public class PlayerControl : MonoBehaviour
             horizontal = Mathf.Clamp(deltaX / 100f, -1f, 1f);
         }
 
-        // Move entire crowd left/right.
-        transform.position +=
-            Vector3.right * horizontal *
-            sideSpeed * Time.deltaTime;
+        horizontalInput = horizontal;
+    }
 
-        Vector3 position = transform.position;
+    private void FixedUpdate()
+    {
+        if (!isRunning)
+            return ;
 
-        position.x = Mathf.Clamp(
-            position.x,
-            -horizontalLimit,
-            horizontalLimit
+        Vector3 movement = new Vector3(
+            horizontalInput * sideSpeed,
+            0f,
+            forwardSpeed
         );
 
-        transform.position = position;
+        Vector3 newPosition = rb.position +
+            movement * Time.fixedDeltaTime;
+
+        // Horizontal boundary
+        newPosition.x = Mathf.Clamp(
+    newPosition.x,
+    -3f,
+    3f
+);
+
+        rb.MovePosition(newPosition);
     }
 }
