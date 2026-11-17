@@ -1,9 +1,7 @@
 
-
-
 using System.Collections.Generic;
-
 using UnityEngine;
+
 
 public class CrowdManager : MonoBehaviour
 {
@@ -46,6 +44,8 @@ public class CrowdManager : MonoBehaviour
         RegisterExistingPlayers();
         ArrangeFormation();
 
+        UpdatePlayerCountUI();
+
         Debug.Log("Blob Crowd Started: " + CurrentCount);
     }
 
@@ -67,6 +67,7 @@ public class CrowdManager : MonoBehaviour
         }
     }
 
+    // ADD PLAYERS
     public void AddPlayers(int amount)
     {
         if (amount <= 0)
@@ -87,7 +88,6 @@ public class CrowdManager : MonoBehaviour
 
             newPlayer.tag = "Player";
 
-            // Start near the center of the crowd.
             newPlayer.transform.localPosition =
                 Random.insideUnitSphere * 0.1f;
 
@@ -96,9 +96,12 @@ public class CrowdManager : MonoBehaviour
 
         ArrangeFormation();
 
+        UpdatePlayerCountUI();
+
         Debug.Log("Players after adding: " + CurrentCount);
     }
 
+    // REMOVE PLAYERS
     public void RemovePlayers(int amount)
     {
         if (amount <= 0)
@@ -123,9 +126,12 @@ public class CrowdManager : MonoBehaviour
 
         ArrangeFormation();
 
+        UpdatePlayerCountUI();
+
         Debug.Log("Players after removing: " + CurrentCount);
     }
 
+    // MULTIPLY PLAYERS
     public void MultiplyPlayers(int multiplier)
     {
         if (multiplier <= 0)
@@ -137,6 +143,7 @@ public class CrowdManager : MonoBehaviour
         AddPlayers(targetCount - oldCount);
     }
 
+    // DIVIDE PLAYERS
     public void DividePlayers(int divisor)
     {
         if (divisor <= 0)
@@ -148,6 +155,20 @@ public class CrowdManager : MonoBehaviour
         RemovePlayers(oldCount - targetCount);
     }
 
+    // UPDATE UI COUNTER
+    private void UpdatePlayerCountUI()
+    {
+        if (PlayerCountManager.Instance != null)
+        {
+            PlayerCountManager.Instance.SetPlayerCount(CurrentCount);
+        }
+        else
+        {
+            Debug.LogWarning("PlayerCountManager instance not found!");
+        }
+    }
+
+    // ARRANGE CROWD FORMATION
     public void ArrangeFormation()
     {
         players.RemoveAll(p => p == null);
@@ -160,7 +181,6 @@ public class CrowdManager : MonoBehaviour
         if (count == 0)
             return;
 
-        // Crowd grows gradually as members increase.
         float radius = Mathf.Max(
             minimumRadius,
             spacing * Mathf.Sqrt(count / Mathf.PI) * 1.25f
@@ -218,7 +238,6 @@ public class CrowdManager : MonoBehaviour
                 return candidate;
         }
 
-        // Fallback if no free position was found.
         float angle = Random.Range(0f, Mathf.PI * 2f);
 
         float fallbackRadius = radius *
@@ -231,6 +250,7 @@ public class CrowdManager : MonoBehaviour
         );
     }
 
+    // MOVE PLAYERS INTO FORMATION
     private void MovePlayersIntoFormation()
     {
         foreach (GameObject player in players)
