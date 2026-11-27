@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &46518519 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3284535258143896196, guid: e0d23b59e6b4e4d4d97237d21e565c0f, type: 3}
+  m_PrefabInstance: {fileID: 1939772796}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &63823029
 GameObject:
   m_ObjectHideFlags: 0
@@ -5750,6 +5755,33 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2800908869308115006, guid: e0d23b59e6b4e4d4d97237d21e565c0f, type: 3}
   m_PrefabInstance: {fileID: 1939772796}
   m_PrefabAsset: {fileID: 0}
+--- !u!54 &871105341
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46518519}
+  serializedVersion: 5
+  m_Mass: 10
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &880280710
 GameObject:
   m_ObjectHideFlags: 0
@@ -11240,7 +11272,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3284535258143896196, guid: e0d23b59e6b4e4d4d97237d21e565c0f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 871105341}
   m_SourcePrefab: {fileID: 100100000, guid: e0d23b59e6b4e4d4d97237d21e565c0f, type: 3}
 --- !u!1 &1949339964
 GameObject:
@@ -12922,7 +12957,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7de1b118365e8744899a1f1514f808b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HammerDamage
-  damageCount: 2
+  damageCount: 5
 --- !u!1001 &3982260238496386855
 PrefabInstance:
   m_ObjectHideFlags: 0
