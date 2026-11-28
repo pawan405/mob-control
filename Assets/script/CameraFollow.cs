@@ -5,7 +5,9 @@ public class CameraFollow : MonoBehaviour
 {
     public Transform player;
 
-    public Vector3 offset = new Vector3(0f, 5f, -8f);
+    public Vector3 offset = new Vector3(0f, 6f, -10f);
+
+    public Vector3 lookAhead = new Vector3(0f, 1.2f, 3f);
 
     public float smoothSpeed = 5f;
 
@@ -22,6 +24,6 @@ public class CameraFollow : MonoBehaviour
             smoothSpeed * Time.deltaTime
         );
 
-        transform.LookAt(player);
+        transform.LookAt(player.position + lookAhead);
     }
 }

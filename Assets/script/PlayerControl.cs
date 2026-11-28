@@ -9,15 +9,26 @@ public class PlayerControl : MonoBehaviour
     public float forwardSpeed = 5f;
     public float sideSpeed = 8f;
     public float horizontalLimit = 3.2f;
+    public bool followSpawnHeading;
+    public bool startAutomatically;
 
     private Rigidbody rb;
     private bool isRunning = false;
 
     private float horizontalInput;
+    private Vector3 startPosition;
+    private Vector3 forward;
+    private Vector3 right;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        startPosition = rb.position;
+        forward = followSpawnHeading
+            ? Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized
+            : Vector3.forward;
+        right = Vector3.Cross(Vector3.up, forward);
+        isRunning = startAutomatically;
     }
 
     private void Update()
@@ -79,21 +90,14 @@ public class PlayerControl : MonoBehaviour
         if (!isRunning)
             return ;
 
-        Vector3 movement = new Vector3(
-            horizontalInput * sideSpeed,
-            0f,
-            forwardSpeed
-        );
+        Vector3 movement = forward * forwardSpeed + right * (horizontalInput * sideSpeed);
 
         Vector3 newPosition = rb.position +
             movement * Time.fixedDeltaTime;
 
         // Horizontal boundary
-        newPosition.x = Mathf.Clamp(
-    newPosition.x,
-    -3f,
-    3f
-);
+        float lateral = Vector3.Dot(newPosition - startPosition, right);
+        newPosition += right * (Mathf.Clamp(lateral, -horizontalLimit, horizontalLimit) - lateral);
 
         rb.MovePosition(newPosition);
     }

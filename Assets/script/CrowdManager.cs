@@ -18,6 +18,9 @@ public class CrowdManager : MonoBehaviour
     [Min(0.01f)]
     public float blendSpeed = 8f;
 
+    [Header("Ground Alignment")]
+    public float groundOffset = -0.45f;
+
     [Min(1)]
     public int placementAttempts = 100;
 
@@ -88,8 +91,11 @@ public class CrowdManager : MonoBehaviour
 
             newPlayer.tag = "Player";
 
-            newPlayer.transform.localPosition =
-                Random.insideUnitSphere * 0.1f;
+            newPlayer.transform.localPosition = new Vector3(
+                Random.Range(-0.1f, 0.1f),
+                groundOffset,
+                Random.Range(-0.1f, 0.1f)
+            );
 
             players.Add(newPlayer);
         }
@@ -219,7 +225,7 @@ public class CrowdManager : MonoBehaviour
 
             candidate = new Vector3(
                 randomPoint.x,
-                0f,
+                groundOffset,
                 randomPoint.y
             );
 
@@ -245,7 +251,7 @@ public class CrowdManager : MonoBehaviour
 
         return new Vector3(
             Mathf.Cos(angle) * fallbackRadius,
-            0f,
+            groundOffset,
             Mathf.Sin(angle) * fallbackRadius
         );
     }
